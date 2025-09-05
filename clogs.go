@@ -120,6 +120,11 @@ func (l *Logger) SetDebugMode(debug bool) {
 	l.debugMode = debug
 }
 
+// SetDebugMode sets the debug mode for the logger.
+func SetDebugMode(debug bool) {
+	std.SetDebugMode(debug)
+}
+
 // Println writes a log message at the "INF" level
 func (l *Logger) Println(v ...any) {
 	l.output("INF", v...)
