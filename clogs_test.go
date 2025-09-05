@@ -6,6 +6,7 @@ package clogs_test
 import (
 	"bytes"
 	"log"
+	"log/slog"
 	"strings"
 	"testing"
 
@@ -166,6 +167,18 @@ func BenchmarkLogger_MessageSizes(b *testing.B) {
 			for i := 0; b.Loop(); i++ {
 				buf.Reset()
 				stdLogger.Println(size.msg, i)
+			}
+		})
+
+		b.Run("slog_"+size.name, func(b *testing.B) {
+			stdSlog := slog.New(slog.NewTextHandler(&buf, nil))
+
+			b.ResetTimer()
+			b.ReportAllocs()
+
+			for i := 0; b.Loop(); i++ {
+				buf.Reset()
+				stdSlog.Info(size.msg, "i", i)
 			}
 		})
 	}
