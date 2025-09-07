@@ -1,6 +1,10 @@
 // Copyright (c) Kyle Huggins
 // SPDX-License-Identifier: BSD-3-Clause
 
+// Package clogs provides a simple logging package. It defines another [Logger] type with methods
+// for printing log lines at various log levels - DBG, INF, WRN, and ERR. Like the standard logger,
+// a predefined Logger is available with a ISO8601-like timestamp format and debug printing
+// disabled.
 package clogs
 
 import (
@@ -12,19 +16,20 @@ import (
 	"time"
 )
 
-// Logger represents an instance of clogs
+// Logger represents an active instance of clogs.
 type Logger struct {
 	buf        []byte
-	debugMode  bool
+	debugMode  bool // Flag controlling the printing of debug level log messages.
 	mu         sync.Mutex
-	out        io.Writer
-	timeFormat string
+	out        io.Writer // The log destination writer.
+	timeFormat string    // The datetime format used by `time.AppendFormat`.
 	lastTime   int64
 	timeStr    []byte
 }
 
 var std = New(os.Stdout)
 
+// New creates a new [Logger] with the specified output writer.
 func New(out io.Writer) *Logger {
 	if out == nil {
 		out = os.Stdout
@@ -125,56 +130,56 @@ func SetDebugMode(debug bool) {
 	std.SetDebugMode(debug)
 }
 
-// Println writes a log message at the "INF" level
+// Println writes a log message at the "INF" level.
 func (l *Logger) Println(v ...any) {
 	l.output("INF", v...)
 }
 
-// Println writes a log message at the "INF" level
+// Println writes a log message at the "INF" level.
 func Println(v ...any) {
 	std.Println(v...)
 }
 
-// Debugln writes a log message at the "DBG" level
+// Debugln writes a log message at the "DBG" level.
 func (l *Logger) Debugln(v ...any) {
 	if l.debugMode {
 		l.output("DBG", v...)
 	}
 }
 
-// Debugln writes a log message at the "DBG" level
+// Debugln writes a log message at the "DBG" level.
 func Debugln(v ...any) {
 	if std.debugMode {
 		std.output("DBG", v...)
 	}
 }
 
-// Infoln writes a log message at the "INF" level
+// Infoln writes a log message at the "INF" level.
 func (l *Logger) Infoln(v ...any) {
 	l.output("INF", v...)
 }
 
-// Infoln writes a log message at the "INF" level
+// Infoln writes a log message at the "INF" level.
 func Infoln(v ...any) {
 	std.Infoln(v...)
 }
 
-// Warnln writes a log message at the "WRN" level
+// Warnln writes a log message at the "WRN" level.
 func (l *Logger) Warnln(v ...any) {
 	l.output("WRN", v...)
 }
 
-// Warnln writes a log message at the "WRN" level
+// Warnln writes a log message at the "WRN" level.
 func Warnln(v ...any) {
 	std.Warnln(v...)
 }
 
-// Errorln writes a log message at the "ERR" level
+// Errorln writes a log message at the "ERR" level.
 func (l *Logger) Errorln(v ...any) {
 	l.output("ERR", v...)
 }
 
-// Errorln writes a log message at the "ERR" level
+// Errorln writes a log message at the "ERR" level.
 func Errorln(v ...any) {
 	std.Errorln(v...)
 }

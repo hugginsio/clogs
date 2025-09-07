@@ -10,3 +10,6 @@ tasks:
   test:
     desc: Run tests
     cmd: "go test -cover"
+  docs:
+    desc: Preview docs
+    cmd: "go doc -http"
