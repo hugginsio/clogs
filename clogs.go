@@ -135,9 +135,21 @@ func (l *Logger) Println(v ...any) {
 	l.output("INF", v...)
 }
 
+// Printf writes a log message at the "INF" level.
+// Arguments are handled in the manner of [log.Printf].
+func (l *Logger) Printf(format string, v ...any) {
+	l.output("INF", fmt.Sprintf(format, v...))
+}
+
 // Println writes a log message at the "INF" level.
 func Println(v ...any) {
 	std.Println(v...)
+}
+
+// Printf writes a log message at the "INF" level.
+// Arguments are handled in the manner of [log.Printf].
+func Printf(format string, v ...any) {
+	std.Printf(format, v...)
 }
 
 // Debugln writes a log message at the "DBG" level.
@@ -147,6 +159,12 @@ func (l *Logger) Debugln(v ...any) {
 	}
 }
 
+// Debugf writes a log message at the "DBG" level.
+// Arguments are handled in the manner of [log.Printf].
+func (l *Logger) Debugf(format string, v ...any) {
+	l.output("DBG", fmt.Sprintf(format, v...))
+}
+
 // Debugln writes a log message at the "DBG" level.
 func Debugln(v ...any) {
 	if std.debugMode {
@@ -154,9 +172,21 @@ func Debugln(v ...any) {
 	}
 }
 
+// Debugf writes a log message at the "DBG" level.
+// Arguments are handled in the manner of [log.Printf].
+func Debugf(format string, v ...any) {
+	std.Debugf(format, v...)
+}
+
 // Infoln writes a log message at the "INF" level.
 func (l *Logger) Infoln(v ...any) {
 	l.output("INF", v...)
+}
+
+// Infof writes a log message at the "INF" level.
+// Arguments are handled in the manner of [log.Printf].
+func (l *Logger) Infof(format string, v ...any) {
+	l.output("INF", fmt.Sprintf(format, v...))
 }
 
 // Infoln writes a log message at the "INF" level.
@@ -164,9 +194,21 @@ func Infoln(v ...any) {
 	std.Infoln(v...)
 }
 
+// Infof writes a log message at the "INF" level.
+// Arguments are handled in the manner of [log.Printf].
+func Infof(format string, v ...any) {
+	std.Infof(format, v...)
+}
+
 // Warnln writes a log message at the "WRN" level.
 func (l *Logger) Warnln(v ...any) {
 	l.output("WRN", v...)
+}
+
+// Warnf writes a log message at the "WRN" level.
+// Arguments are handled in the manner of [log.Printf].
+func (l *Logger) Warnf(format string, v ...any) {
+	l.output("WRN", fmt.Sprintf(format, v...))
 }
 
 // Warnln writes a log message at the "WRN" level.
@@ -174,12 +216,30 @@ func Warnln(v ...any) {
 	std.Warnln(v...)
 }
 
+// Warnf writes a log message at the "WRN" level.
+// Arguments are handled in the manner of [log.Printf].
+func Warnf(format string, v ...any) {
+	std.Warnf(format, v...)
+}
+
 // Errorln writes a log message at the "ERR" level.
 func (l *Logger) Errorln(v ...any) {
 	l.output("ERR", v...)
 }
 
+// Errorf writes a log message at the "ERR" level.
+// Arguments are handled in the manner of [log.Printf].
+func (l *Logger) Errorf(format string, v ...any) {
+	l.output("ERR", fmt.Sprintf(format, v...))
+}
+
 // Errorln writes a log message at the "ERR" level.
 func Errorln(v ...any) {
 	std.Errorln(v...)
+}
+
+// Errorf writes a log message at the "ERR" level.
+// Arguments are handled in the manner of [log.Printf].
+func Errorf(format string, v ...any) {
+	std.Errorf(format, v...)
 }
