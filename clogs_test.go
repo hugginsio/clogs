@@ -68,7 +68,7 @@ func TestLogger_Println(t *testing.T) {
 	}
 }
 
-func TestLogger_OutputFormat(t *testing.T) {
+func TestLogger_Println_OutputFormat(t *testing.T) {
 	var buf bytes.Buffer
 	logger := clogs.New(&buf)
 
@@ -94,6 +94,35 @@ func TestLogger_OutputFormat(t *testing.T) {
 	// Check log level and message
 	if !strings.HasPrefix(parts[2], "INF test message") {
 		t.Errorf("Expected message to start with 'INF test message', got: %s", parts[2])
+	}
+}
+
+func TestLogger_Printf_OutputFormat(t *testing.T) {
+	var buf bytes.Buffer
+	logger := clogs.New(&buf)
+
+	logger.Printf("digit: %d, value: %v", 123, "abc")
+	output := buf.String()
+
+	// Should have format: "YYYY-MM-DD HH:MM:SS INF digit: 123, value: abc\n"
+	parts := strings.SplitN(output, " ", 3)
+	if len(parts) != 3 {
+		t.Fatalf("Expected 3 parts (date, time, rest), got %d: %v", len(parts), parts)
+	}
+
+	// Check date format (YYYY-MM-DD)
+	if len(parts[0]) != 10 || parts[0][4] != '-' || parts[0][7] != '-' {
+		t.Errorf("Expected date format YYYY-MM-DD, got: %s", parts[0])
+	}
+
+	// Check time format (HH:MM:SS)
+	if len(parts[1]) != 8 || parts[1][2] != ':' || parts[1][5] != ':' {
+		t.Errorf("Expected time format HH:MM:SS, got: %s", parts[1])
+	}
+
+	// Check log level and message
+	if !strings.HasPrefix(parts[2], "INF digit: 123, value: abc") {
+		t.Errorf("Expected message to start with 'INF digit: 123, value: abc', got: %s", parts[2])
 	}
 }
 
@@ -179,6 +208,45 @@ func BenchmarkLogger_MessageSizes(b *testing.B) {
 			for i := 0; b.Loop(); i++ {
 				buf.Reset()
 				stdSlog.Info(size.msg, "i", i)
+			}
+		})
+	}
+}
+
+func BenchmarkLogger_MessageFormatting(b *testing.B) {
+	var buf bytes.Buffer
+	logger := clogs.New(&buf)
+
+	formats := []struct {
+		name   string
+		format string
+		values []any
+	}{
+		{"single", "id: %d", []any{1}},
+		{"double", "id: %d, message: %s", []any{2, "string"}},
+		{"triple", "id: %d, message: %s, extra: %s", []any{3, "another string message", "additional info"}},
+	}
+
+	for _, format := range formats {
+		b.Run("clogs_"+format.name, func(b *testing.B) {
+			b.ResetTimer()
+			b.ReportAllocs()
+
+			for i := 0; b.Loop(); i++ {
+				buf.Reset()
+				logger.Printf(format.format, format.values...)
+			}
+		})
+
+		b.Run("standard_"+format.name, func(b *testing.B) {
+			stdLogger := log.New(&buf, "", log.LstdFlags)
+
+			b.ResetTimer()
+			b.ReportAllocs()
+
+			for i := 0; b.Loop(); i++ {
+				buf.Reset()
+				stdLogger.Printf(format.format, format.values)
 			}
 		})
 	}
