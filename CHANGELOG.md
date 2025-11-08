@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0](https://github.com/hugginsio/clogs/compare/v0.0.2...v0.1.0) (2025-11-08)
+
+
+### Features
+
+* add formatted methods ([#4](https://github.com/hugginsio/clogs/issues/4)) ([1a0ed7c](https://github.com/hugginsio/clogs/commit/1a0ed7cb3b95500d4a08f73e226c22c46f21f02a))
+
+
+### Bug Fixes
+
+* readme formatting ([#6](https://github.com/hugginsio/clogs/issues/6)) ([e34b4a0](https://github.com/hugginsio/clogs/commit/e34b4a0891881cb09040d0f300c2327ddced250d))
+
 ## [0.0.2](https://github.com/hugginsio/clogs/compare/v0.0.1...v0.0.2) (2025-09-07)
 
 
