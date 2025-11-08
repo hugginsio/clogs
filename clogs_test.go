@@ -212,3 +212,42 @@ func BenchmarkLogger_MessageSizes(b *testing.B) {
 		})
 	}
 }
+
+func BenchmarkLogger_MessageFormatting(b *testing.B) {
+	var buf bytes.Buffer
+	logger := clogs.New(&buf)
+
+	formats := []struct {
+		name   string
+		format string
+		values []any
+	}{
+		{"single", "id: %d", []any{1}},
+		{"double", "id: %d, message: %s", []any{2, "string"}},
+		{"triple", "id: %d, message: %s, extra: %s", []any{3, "another string message", "additional info"}},
+	}
+
+	for _, format := range formats {
+		b.Run("clogs_"+format.name, func(b *testing.B) {
+			b.ResetTimer()
+			b.ReportAllocs()
+
+			for i := 0; b.Loop(); i++ {
+				buf.Reset()
+				logger.Printf(format.format, format.values...)
+			}
+		})
+
+		b.Run("standard_"+format.name, func(b *testing.B) {
+			stdLogger := log.New(&buf, "", log.LstdFlags)
+
+			b.ResetTimer()
+			b.ReportAllocs()
+
+			for i := 0; b.Loop(); i++ {
+				buf.Reset()
+				stdLogger.Printf(format.format, format.values)
+			}
+		})
+	}
+}
